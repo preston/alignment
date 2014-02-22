@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="Preston Lee">
+		<link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+	
+		<title>Sequence Alignment Visualizer- Preston Lee</title>
+	
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="javascripts/application.js"></script>
+
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+		<link href="stylesheets/application.css" rel="stylesheet">
+
+	</head>
+
+	<body screen_capture_injected="true">
+
+	
+		<div class="container">
+			<h1>Dynamic Programming Alignment</h1>
+			<form id="sequence_form" class="well">
+				<div class="col-md-6">
+					<div>
+						<label for="sequence1">Sequence 1</label>
+						<input id="sequence1" type="text" placeholder="GATTACAGATACCA" required></input>
+					</div>
+					<div>
+						<label for="sequence2">Sequence 2</label>
+						<input id="sequence2" type="text" placeholder="GATACAGGATAACA" required></input>
+					</div>
+					<!--p class="lead">Optionally fiddle with scoring.</p>
+					<div>
+						<label for="gap_penalty">Gap Penalty</label>
+						<input id="gap_penalty" type="text" default="1" required></input>
+					</div-->
+				</div>
+				<div class="col-md-6">
+					<p class="lead">Type in some sequences to pairwise align. </p>
+				</div>
+				<div class="clearfix"></div>
+			</form>
+	
+			<div class="row">
+				<div id="matches_area" class="col-md-6">
+					<h2>Exact Matches</h2>
+					<div id="matches">
+					</div>
+				</div>
+				<div id="scored_area" class="col-md-6">
+					<h2>Computed Scored</h2>
+					<div id="scored">
+					</div>
+				</div>
+			</div>
+	
+			<footer class="footer">Copyright &copy; 2014 Preston Lee. All rights reserved.</footer>
+		</div>
+	
+	
+
+	</body>
+</html>
