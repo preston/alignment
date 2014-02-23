@@ -1,3 +1,6 @@
+body {
+	background: repeat url(../images/crossword.png);
+}
 #alignments, input[type="text"] {
 	font-family: Courier;
 }
