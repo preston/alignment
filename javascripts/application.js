@@ -1,5 +1,10 @@
+/**
+ * Copyright 2014 Preston Lee. All rights reserved.
+ */
+
 $(function() {
 	console.log("Initializing page.");
+	$('#results').hide();
 	$("body").on('keyup', '#sequence_form input', function() {
 		console.log("Form changed!");
 
@@ -7,12 +12,17 @@ $(function() {
 		var s2 = $('#sequence2').val().toUpperCase();
 		if(s1.length > 0 && s2.length > 0) {
 			clearVisualizations();
+			$('#results').slideDown();
 			var data = generateMatrixData(s1, s2);
 			refreshVizualization(data, 'matches');
 			var scored = generateScoredData(s1, s2, data);
 			refreshVizualization(scored, 'scored');
+			var alignments = addTraceData(s1, s2, scored);
+			refreshVizualization(scored, 'trace');
+			refreshAlignments(alignments);
 		} else {
 			clearVisualizations();
+			$('#results').slideUp();
 		}
 	});
 });
@@ -20,7 +30,15 @@ $(function() {
 function clearVisualizations() {
 	$('#matches').innerHTML = '';
 	$('#scored').innerHTML = '';
+	$('#trace').innerHTML = '';
+	$('#alignments').innerHTML = '';
+}
 
+function refreshAlignments(alignments) {
+	var html = '';
+	html += '<h1>' + alignments[0] + '</h1>';
+	html += '<h1>' + alignments[1] + '</h1>';
+	$('#alignments').html(html);
 }
 
 function refreshVizualization(data, elem) {
@@ -30,7 +48,7 @@ function refreshVizualization(data, elem) {
 	for (var y = 0, len = data.length; y < len; ++y) {
 	    html += '<tr>';
 	    for (var x = 0, rowLen = data[y].length; x < rowLen; ++x ) {
-	        html += '<td>' + data[y][x] + '</td>';
+	        html += '<td class="' + '">' + data[y][x] + '</td>';
 	    }
 	    html += "</tr>";
 	}
@@ -38,6 +56,74 @@ function refreshVizualization(data, elem) {
 	
 	// $(html).appendTo(m);
 	m.html(html);
+}
+
+function addTraceData(s1, s2, trace) {
+	var rows = trace.length - 1;
+	var cols = trace[0].length - 1;
+	// Deep copy.
+	// var trace = $.extend(true, [], scored);
+	// trace.shift().shift();
+
+	// Walk it!
+	var s1aligned = [];
+	var s2aligned = [];
+	// xOffset = 1;
+	// yOffset = 1;
+	var best, bestX, bestY, curX, curY;
+	var strings = ['', ''];
+	for(curX = 1, curY = 1; curX <= cols && curY <= rows;) {
+		best = -1;
+		bestX = curX;
+		bestY = curY;
+		for (var y = curY; y <= rows; y++) {
+			if(trace[y][0] == trace[0][curX] && trace[y][curX] > best) {
+				best = trace[y][curX];
+				bestX = curX;
+				bestY = y;
+			}
+		}
+    	for (var x = curX; x <= cols; x++) {
+			if(trace[curY][0] == trace[0][x] && trace[curY][x] > best) {
+				best = trace[curY][x];
+				bestX = x;
+				bestY = curY;
+			}
+    	}
+    	trace[bestY][bestX] = '<span class="bg-danger"><b>&nbsp;' + trace[bestY][bestX] + '&nbsp;</b></span>';
+    	var diffX = bestX - curX;
+    	var diffY = bestY - curY;
+    	strings[0] += repeat('-', diffY);
+    	strings[1] += repeat('-', diffX);
+    	for(var i = 0; i < diffX && curX + i <= cols; i++) {
+    		strings[0] += trace[0][curX + i];
+	    	// strings[1] += trace[curX + i][0];
+    	}
+    	for(var i = 0; i < diffY && curY + i <= rows; i++) {
+    		strings[1] += trace[curY + i][0];
+	    	// strings[0] += trace[0][curY + i];
+    	}
+    	strings[0] += trace[0][bestX];
+    	strings[1] += trace[bestY][0];
+    	curX = bestX + 1;
+    	curY = bestY + 1;
+    	// if(curX > cols && curY <= rows) {
+    	// 	curX = cols;
+    	// }
+    	// if(curY > rows && curX <= cols) {
+    	// 	curY = rows;
+    	// }
+	}
+	// Add whatever crap is left over.
+	for(var i = curX; i <= cols; i++) {
+		strings[0] += trace[0][i];
+		strings[1] += '-';
+	}
+	for(var i = curY; i <= rows; i++) {
+		strings[1] += trace[i][0];
+		strings[0] += '-';
+	}
+	return strings;
 }
 
 function generateScoredData(s1, s2, data) {
@@ -63,8 +149,7 @@ function generateScoredData(s1, s2, data) {
 				max = Math.max(max, scored[y+1][subX]);
 			}
 			if(max >= 0) {
-				scored[y][x] = cur + max;
-				console.log(dump(scored));				
+				scored[y][x] = cur + max;			
 			} else {
 				// It's the bottom-most or right-most row, so just copy the source data row.
 				scored[y][x] = data[y][x];
@@ -100,39 +185,4 @@ function generateMatrixData(s1, s2) {
 		}
 	}
 	return data;
-}
-
-
-
-function dump(obj, indent)
-{
-  var result = "";
-  if (indent == null) indent = "";
-
-  for (var property in obj)
-  {
-    var value = obj[property];
-    if (typeof value == 'string')
-      value = "'" + value + "'";
-    else if (typeof value == 'object')
-    {
-      if (value instanceof Array)
-      {
-        // Just let JS convert the Array to a string!
-        value = "[ " + value + " ]";
-      }
-      else
-      {
-        // Recursive dump
-        // (replace "  " by "\t" or something else if you prefer)
-        var od = dump(value, indent + "  ");
-        // If you like { on the same line as the key
-        //value = "{\n" + od + "\n" + indent + "}";
-        // If you prefer { and } to be aligned
-        value = "\n" + indent + "{\n" + od + "\n" + indent + "}";
-      }
-    }
-    result += indent + "'" + property + "' : " + value + ",\n";
-  }
-  return result.replace(/,\n$/, "");
 }
