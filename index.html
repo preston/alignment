@@ -28,15 +28,12 @@
 	
 		<div class="container">
 			<h1>Dynamic Programming Alignment</h1>
+			<p class="lead">Type in some sequences to pairwise align. </p>
 			<form id="sequence_form" class="well">
 				<div class="col-md-6">
 					<div>
 						<label for="sequence1">Sequence 1</label>
-						<input id="sequence1" type="text" placeholder="GATTACAGATACCA" required autofocus></input>
-					</div>
-					<div>
-						<label for="sequence2">Sequence 2</label>
-						<input id="sequence2" type="text" placeholder="GATACAGGATAACA" required></input>
+						<input id="sequence1" class="form-control input-lg" type="text" placeholder="GATTACAGATACCA" required autofocus></input>
 					</div>
 					<!--p class="lead">Optionally fiddle with scoring.</p>
 					<div>
@@ -45,7 +42,10 @@
 					</div-->
 				</div>
 				<div class="col-md-6">
-					<p class="lead">Type in some sequences to pairwise align. </p>
+					<div>
+						<label for="sequence2">Sequence 2</label>
+						<input id="sequence2" class="form-control input-lg" type="text" placeholder="GATACAGGATAACA" required></input>
+					</div>
 				</div>
 				<div class="clearfix"></div>
 			</form>

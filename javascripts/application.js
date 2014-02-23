@@ -44,11 +44,22 @@ function refreshAlignments(alignments) {
 function refreshVizualization(data, elem) {
 	var m = $('#' + elem);
 
-	var html = '<table class="table table-striped table-condensed"><tbody>';
+	var html = '<table class="table table-striped table-condensed table-bordered"><tbody>';
+	var type = 'th';
 	for (var y = 0, len = data.length; y < len; ++y) {
 	    html += '<tr>';
+	    if(y > 0){
+	    	type = 'td';
+	    }
 	    for (var x = 0, rowLen = data[y].length; x < rowLen; ++x ) {
-	        html += '<td class="' + '">' + data[y][x] + '</td>';
+	        html += '<' + type + ' class="' + '">';
+	        if(x == 0) {
+	        	html += '<b>' + data[y][x] + '</b>';
+	        } else {
+	        	html += data[y][x];
+	        }
+	        data[y][x];
+	        html += '</' + type + '>';
 	    }
 	    html += "</tr>";
 	}
@@ -90,21 +101,26 @@ function addTraceData(s1, s2, trace) {
 				bestY = curY;
 			}
     	}
-    	trace[bestY][bestX] = '<span class="bg-danger"><b>&nbsp;' + trace[bestY][bestX] + '&nbsp;</b></span>';
-    	var diffX = bestX - curX;
-    	var diffY = bestY - curY;
-    	strings[0] += repeat('-', diffY);
-    	strings[1] += repeat('-', diffX);
-    	for(var i = 0; i < diffX && curX + i <= cols; i++) {
-    		strings[0] += trace[0][curX + i];
-	    	// strings[1] += trace[curX + i][0];
+    	if(best >= 0) {
+	    	trace[bestY][bestX] = '<span class="bg-danger"><b>&nbsp;' + trace[bestY][bestX] + '&nbsp;</b></span>';
+	    	var diffX = bestX - curX;
+	    	var diffY = bestY - curY;
+	    	strings[0] += repeat('-', diffY);
+	    	strings[1] += repeat('-', diffX);
+	    	for(var i = 0; i < diffX && curX + i <= cols; i++) {
+	    		strings[0] += trace[0][curX + i];
+		    	// strings[1] += trace[curX + i][0];
+	    	}
+	    	for(var i = 0; i < diffY && curY + i <= rows; i++) {
+	    		strings[1] += trace[curY + i][0];
+		    	// strings[0] += trace[0][curY + i];
+	    	}
+	    	strings[0] += trace[0][bestX];
+	    	strings[1] += trace[bestY][0];
+    	} else {
+    		strings[0] += '-';
+    		strings[1] += '-';
     	}
-    	for(var i = 0; i < diffY && curY + i <= rows; i++) {
-    		strings[1] += trace[curY + i][0];
-	    	// strings[0] += trace[0][curY + i];
-    	}
-    	strings[0] += trace[0][bestX];
-    	strings[1] += trace[bestY][0];
     	curX = bestX + 1;
     	curY = bestY + 1;
     	// if(curX > cols && curY <= rows) {
