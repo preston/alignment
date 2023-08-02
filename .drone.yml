@@ -1,0 +1,19 @@
+---
+kind: pipeline
+type: docker
+steps:
+  # - name: build_project
+  #   image: node:20-alpine
+  #   commands:
+  #     - npm install
+  #     - npm run build
+  - name: publish
+    image: plugins/docker
+    settings:
+      repo:
+        from_secret:  docker_repository
+      tags: [latest]
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
