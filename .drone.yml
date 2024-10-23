@@ -2,11 +2,6 @@
 kind: pipeline
 type: docker
 steps:
-  # - name: build_project
-  #   image: node:20-alpine
-  #   commands:
-  #     - npm install
-  #     - npm run build
   - name: publish
     image: plugins/docker
     settings:
